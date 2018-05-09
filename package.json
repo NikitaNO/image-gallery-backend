@@ -1,0 +1,14 @@
+{
+  "name": "TestServer",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "body-parser": "~1.13.2",
+    "express": "~4.13.1",
+    "mongodb": "2.1.6",
+    "multer": "^1.2.0"
+  }
+}
