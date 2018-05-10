@@ -6,8 +6,6 @@ MongoClient.connect("mongodb://localhost:27017/imageGallery", (err, db) => {
   if (!err) {
     albums = db.collection('albums');
     photos = db.collection('photos');
-
-    console.log("We are connected to db");
   } else {
     console.log("error connection", err);
   }
@@ -24,12 +22,11 @@ const getAlbums = (req, res, next) => {
 }
 
 const getPhoto = (req, res, next) => {
-  console.log(req.params.id);
   photos.find({album_id: req.params.id}).toArray((err, photos) => {
     if (err) {
       res.send("error");
     } else {
-      res.json({message: 'success', photos: photos ? photos : []});
+      res.json({message: 'success', photos });
     }
   });
 };
@@ -42,7 +39,6 @@ const createAlbum = (req, res, next) =>  {
     cover_image: req.file.filename,
     date: new Date().toISOString()
   }, (err) => {
-    console.log('result',album._id);
     if (err) {
       res.send("error");
     } else {
@@ -93,14 +89,12 @@ const updatePhoto = (req, res, next) => {
       if (err) {
         res.send("error");
       } else {
-        console.log(result);
         res.json({message: 'success'});
       }
     });
 }
 
 const deletePhoto = (req, res, next) => {
-  console.log('remove', req.params.id);
   photos.remove({_id: ObjectId(`${req.params.id}`)}, true, (err) => {
     if (err) {
       res.send("error");
@@ -112,13 +106,12 @@ const deletePhoto = (req, res, next) => {
 
 const search = (req, res, next) => {
   const result = {};
-  console.log('remove', req.query);
+
   albums.find({ $or:[
     {"name": {$regex: new RegExp(req.query.name)}},
     {"description": {$regex: new RegExp(req.query.name)}}
   ]}).toArray((err, albums) => {
       if (err){
-        console.log(err);
         res.send("error");
       } else {
         result.albums = albums;
@@ -128,7 +121,6 @@ const search = (req, res, next) => {
           {"hash_tags": {$regex: new RegExp(req.query.name)}},
         ]}).toArray((err, photos) => {
             if (err){
-              console.log(err);
               res.send("error");
             } else {
               result.photos = photos;
